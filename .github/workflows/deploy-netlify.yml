@@ -54,8 +54,8 @@ jobs:
         pwd
         echo "running ls /home/runner/work/rockydocs2/"
         ls -l /home/runner/work/rockydocs2/
-        echo "running ls /home/runner/work/rockydocs2/rockydocs2"
-        ls -l /home/runner/work/rockydocs2/rockydocs
+        echo "running ls -l /home/runner/work/rockydocs2/rockydocs2"
+        ls -l /home/runner/work/rockydocs2/rockydocs2
         echo "running cd mkdocs-app"
         cd mkdocs-app
         echo "running ls -l"
