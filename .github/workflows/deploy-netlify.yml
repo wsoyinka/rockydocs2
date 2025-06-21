@@ -37,11 +37,17 @@ jobs:
         pwd
         mkdir -p mkdocs-app/docs
         cp -r docs mkdocs-app/docs/
+        echo "Running ls -l ."
         ls -l .
+        echo "Now Running ls -l mkdocs-app/"
         ls -l mkdocs-app/
-        ls -l mkdocs-app/content/
-        ls -l mkdocs-app/content/docs
-        ls -l mkdocs-app/content/docs/docs
+        echo "Now Running ls -l mkdocs-app/docs/"
+        ls -l mkdocs-app/docs/
+        echo "Now Running ls -l mkdocs-app/docs/docs/"
+        ls -l mkdocs-app/docs/docs/
+ #       ls -l mkdocs-app/content/docs
+ #       ls -l mkdocs-app/content/docs
+ #       ls -l mkdocs-app/content/docs/docs
 
     - name: Build MkDocs site
       run: |
