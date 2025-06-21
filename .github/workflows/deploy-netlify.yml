@@ -51,7 +51,18 @@ jobs:
 
     - name: Build MkDocs site
       run: |
+        pwd
+        echo "running ls /home/runner/work/rockydocs2/"
+        ls -l /home/runner/work/rockydocs2/
+        echo "running ls /home/runner/work/rockydocs2/rockydocs2"
+        ls -l /home/runner/work/rockydocs2/rockydocs
+        echo "running cd mkdocs-app"
         cd mkdocs-app
+        echo "running ls -l"
+        ls -l 
+        echo "looking for file ..."
+        ls -l /home/runner/work/rockydocs2/rockydocs2/mkdocs-app/docs/docs/guides/contribute/README.md
+        echo "running mkdocs build"
         mkdocs build
 
     - name: Deploy to Netlify
