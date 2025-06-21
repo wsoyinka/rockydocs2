@@ -35,7 +35,8 @@ jobs:
     - name: Copy content into mkdocs-app/content
       run: |
         mkdir -p mkdocs-app/content
-        cp -r docs/. mkdocs-app/content/
+        cp -rv docs/. mkdocs-app/content/
+        ls -l mkdocs-app/content/
 
     - name: Build MkDocs site
       run: |
