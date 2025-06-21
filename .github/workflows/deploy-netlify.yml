@@ -1,0 +1,54 @@
+name: Deploy MkDocs Site to Netlify
+
+on:
+  push:
+    branches:
+      - rockydocs2-netlify
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout content repo (rockydocs2)
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+
+    - name: Checkout MkDocs app repo (docs.rockylinux.org)
+      uses: actions/checkout@v4
+      with:
+        repository: rocky-linux/docs.rockylinux.org
+        path: mkdocs-app
+        ref: main
+        fetch-depth: 1
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install MkDocs dependencies
+      run: |
+        pip install -r mkdocs-app/requirements.txt
+
+    - name: Copy content into mkdocs-app/content
+      run: |
+        mkdir -p mkdocs-app/content
+        cp -r docs/. mkdocs-app/content/
+
+    - name: Build MkDocs site
+      run: |
+        cd mkdocs-app
+        mkdocs build
+
+    - name: Deploy to Netlify
+      uses: nwtgck/actions-netlify@v2.0
+      with:
+        publish-dir: mkdocs-app/site
+        production-deploy: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Automated deploy from rockydocs2-netlify ${{ github.sha }}"
+        netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
+
