@@ -61,7 +61,7 @@ jobs:
         echo "running ls -l"
         ls -l 
         echo "looking for file ..."
-        ls -l /home/runner/work/rockydocs2/rockydocs2/mkdocs-app/docs/docs/guides/contribute/README.md
+        ls -l /home/runner/work/rockydocs2/rockydocs2/mkdocs-app/docs/content/docs/guides/contribute/README.md
         echo "running mkdocs build"
         mkdocs build
 
