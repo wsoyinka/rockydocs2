@@ -15,7 +15,7 @@ jobs:
       with:
         fetch-depth: 1
 
-    - name: Checkout MkDocs app repo (docs.rockylinux.org)
+    - name: Checkout MkDocs app repo (wsoyinka/docs.rockylinux.org)
       uses: actions/checkout@v4
       with:
         repository: wsoyinka/docs.rockylinux.org
