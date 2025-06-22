@@ -18,7 +18,7 @@ jobs:
     - name: Checkout MkDocs app repo (docs.rockylinux.org)
       uses: actions/checkout@v4
       with:
-        repository: rocky-linux/docs.rockylinux.org
+        repository: wsoyinka/docs.rockylinux.org
         path: mkdocs-app
         ref: main
         fetch-depth: 1
@@ -35,16 +35,16 @@ jobs:
     - name: Copy content into mkdocs-app/content
       run: |
         pwd
-        mkdir -p mkdocs-app/docs
-        cp -r docs mkdocs-app/docs/
+        mkdir -p mkdocs-app/docs/content
+        cp -r docs mkdocs-app/docs/content/
         echo "Running ls -l ."
         ls -l .
         echo "Now Running ls -l mkdocs-app/"
         ls -l mkdocs-app/
         echo "Now Running ls -l mkdocs-app/docs/"
         ls -l mkdocs-app/docs/
-        echo "Now Running ls -l mkdocs-app/docs/docs/"
-        ls -l mkdocs-app/docs/docs/
+        echo "Now Running ls -l mkdocs-app/docs/content/"
+        ls -l mkdocs-app/docs/content/
  #       ls -l mkdocs-app/content/docs
  #       ls -l mkdocs-app/content/docs
  #       ls -l mkdocs-app/content/docs/docs
