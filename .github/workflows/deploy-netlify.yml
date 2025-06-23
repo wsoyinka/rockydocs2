@@ -65,11 +65,20 @@ jobs:
            git push origin gh-pages
         fi
         echo "gh-pages exists or created. Now deploying versions."
+        echo "list all branches"
+        git branch -avvv
+        echo "list all remotes"
+        git remote -vv
         git checkout netlify
         mike deploy --update-aliases --branch gh-pages 8
         mike deploy --update-aliases --branch gh-pages 9
         mike deploy --update-aliases --branch gh-pages 10 latest
         mike set-default --branch gh-pages latest
+        echo "run mike list"
+        mike list
+        echo "run ls "
+        pwd && ls -l && git log -10 --oneline
+
 
     - name: Deploy to Netlify using V3
       uses: nwtgck/actions-netlify@v3
