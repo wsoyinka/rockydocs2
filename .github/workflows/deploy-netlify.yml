@@ -63,7 +63,12 @@ jobs:
         echo "looking for file ..."
         ls -l /home/runner/work/rockydocs2/rockydocs2/mkdocs-app/docs/content/docs/guides/contribute/README.md
         echo "running mkdocs build"
-        mkdocs build
+   #     mkdocs build
+   #     mkdocs build
+        mike deploy 8
+        mike deploy 9
+        mike deploy 10 latest
+        mike set-default latest
 
     - name: Deploy to Netlify using V3
       uses: nwtgck/actions-netlify@v3
