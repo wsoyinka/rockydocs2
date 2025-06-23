@@ -46,28 +46,35 @@ jobs:
         echo "Now Running ls -l mkdocs-app/docs/content/"
         ls -l mkdocs-app/docs/content/
 
-    - name: Build + deploy versions with mike
+
+   - name: Build and deploy versions with mike
       run: |
         cd mkdocs-app
         git config --global user.name "wsoyinka"
         git config --global user.email "webmaster@rockylinux.org"
-        git remote set-url origin 'https://x-access-token:${{ secrets.PAT_DEPLOY_TOKEN }}@github.com/wsoyinka/docs.rockylinux.org.git'
-        git fetch origin
-        if git ls-remote --exit-code --heads origin gh-pages; then
-          echo "gh-pages exists. Checking it out."
-          git checkout gh-pages
-          git pull origin gh-pages
-        else
-          echo "gh-pages does not exist. Creating orphan branch."
-          git checkout --orphan gh-pages
-          git reset --hard
-          git commit --allow-empty -m "Initial gh-pages commit"
-          git push origin gh-pages
-        fi
 
-        # Now safe to deploy versions
-        mike deploy 8
-        mike deploy 9
-        mike deploy 10 latest
-        mike set-default latest
-        git push origin gh-pages
+        # Use token to allow pushing to netlify branch
+        git remote set-url origin https://x-access-token:${{ secrets.PAT_DEPLOY_TOKEN }}@github.com/wsoyinka/docs.rockylinux.org.git
+
+        git fetch origin
+        git checkout netlify
+        git pull origin netlify
+
+        # Deploy versions to netlify branch
+        mike deploy --branch netlify 8
+        mike deploy --branch netlify 9
+        mike deploy --branch netlify 10 latest
+        mike set-default --branch netlify latest
+
+        git push origin netlify
+
+    - name: Deploy to Netlify using V3
+      uses: nwtgck/actions-netlify@v3
+      with:
+        publish-dir: mkdocs-app/site
+        production-deploy: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Automated deploy from rockydocs2-netlify ${{ github.sha }}"
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
