@@ -1,0 +1,90 @@
+name: Deploy MkDocs Site to Netlify
+
+on:
+  push:
+    branches:
+      - rockydocs2-netlify
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout content repo (rockydocs2)
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
+
+    - name: Checkout MkDocs app repo (wsoyinka/docs.rockylinux.org)
+      uses: actions/checkout@v4
+      with:
+        repository: wsoyinka/docs.rockylinux.org
+        path: mkdocs-app
+        ref: netlify
+        fetch-depth: 1
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install MkDocs dependencies
+      run: |
+        pip install -r mkdocs-app/requirements.txt
+
+    - name: Copy content into mkdocs-app/content
+      run: |
+        pwd
+        mkdir -p mkdocs-app/docs/content
+        cp -r docs mkdocs-app/docs/content/
+        echo "Running ls -l ."
+        ls -l .
+        echo "Now Running ls -l mkdocs-app/"
+        ls -l mkdocs-app/
+        echo "Now Running ls -l mkdocs-app/docs/"
+        ls -l mkdocs-app/docs/
+        echo "Now Running ls -l mkdocs-app/docs/content/"
+        ls -l mkdocs-app/docs/content/
+
+
+    - name: Deploy docs with mike to gh-pages
+      run: |
+        cd mkdocs-app
+        git config --global user.name "wsoyinka"
+        git config --global user.email "webmaster@rockylinux.org"
+        echo "Use PAT token for auth (not GITHUB_TOKEN)"
+        git remote set-url origin https://x-access-token:${{ secrets.PAT_DEPLOY_TOKEN }}@github.com/wsoyinka/docs.rockylinux.org.git
+        echo "Now running git fetch origin"
+        git fetch origin
+
+        # If gh-pages branch does not exist, create it
+        if ! git ls-remote --exit-code --heads origin gh-pages; then
+           echo "gh-pages does not exist. Creating orphan branch."
+           git checkout --orphan gh-pages
+           git reset --hard
+           git commit --allow-empty -m "Initial gh-pages commit"
+           git push origin gh-pages
+           git checkout netlify  # go back to netlify branch after init
+        fi
+
+        echo "Deploying versions with mike..."
+        mike deploy --update-aliases --branch gh-pages 8
+        mike deploy --update-aliases --branch gh-pages 9
+        mike deploy --update-aliases --branch gh-pages 10 latest
+        mike set-default --branch gh-pages latest
+
+        echo "Pushing gh-pages updates"
+        git push origin gh-pages
+
+
+    - name: Deploy to Netlify using V3
+      uses: nwtgck/actions-netlify@v3
+      with:
+        publish-dir: mkdocs-app/site
+        production-deploy: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Automated deploy from rockydocs2-netlify ${{ github.sha }}"
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
