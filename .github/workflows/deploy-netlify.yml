@@ -54,9 +54,9 @@ jobs:
         git config --global user.email "webmaster@rockylinux.org"
         git fetch origin gh-pages || git checkout --orphan gh-pages
         git checkout gh-pages
-        mike deploy 8 -u -b /
-        mike deploy 9 -u -b /
-        mike deploy 10 latest -u -b /
-        mike set-default latest -u -b /
+        mike deploy 8 
+        mike deploy 9
+        mike deploy 10 latest
+        mike set-default latest
         git push origin gh-pages
 
