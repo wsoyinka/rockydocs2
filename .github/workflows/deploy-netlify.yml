@@ -51,17 +51,19 @@ jobs:
         cd mkdocs-app
         git config --global user.name "wsoyinka"
         git config --global user.email "webmaster@rockylinux.org"
-        # Use PAT token for auth (not GITHUB_TOKEN)
-        #git remote set-url origin https://x-access-token:${{ secrets.PAT_DEPLOY_TOKEN }}@github.com/wsoyinka/docs.rockylinux.org.git
+        echo "Use PAT token for auth (not GITHUB_TOKEN)"
+        git remote set-url origin https://x-access-token:${{ secrets.PAT_DEPLOY_TOKEN }}@github.com/wsoyinka/docs.rockylinux.org.git
+        echo "Previous set-url cmd successed"
+        echo "Now running git fetch origin"
         git fetch origin
         # If gh-pages branch does not exist yet, create it
-        #if ! git ls-remote --exit-code --heads origin gh-pages; then
-        #   echo "gh-pages does not exist. Creating orphan branch."
+        if ! git ls-remote --exit-code --heads origin gh-pages; then
+           echo "gh-pages does not exist. Creating orphan branch."
         #   git checkout --orphan gh-pages
         #   git reset --hard
         #   git commit --allow-empty -m "Initial gh-pages commit"
         #   git push origin gh-pages
-        # fi
+        fi
         echo "gh-pages exists or created. Now deploying versions."
         git checkout netlify
         mike deploy --update-aliases --branch gh-pages 8
