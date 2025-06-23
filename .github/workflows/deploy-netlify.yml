@@ -46,8 +46,7 @@ jobs:
         echo "Now Running ls -l mkdocs-app/docs/content/"
         ls -l mkdocs-app/docs/content/
 
-
-- name: Build + deploy versions with mike
+    - name: Build + deploy versions with mike
       run: |
         cd mkdocs-app
         git config --global user.name "wsoyinka"
