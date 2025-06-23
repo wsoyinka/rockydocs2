@@ -51,6 +51,7 @@ jobs:
         cd mkdocs-app
         git config --global user.name "wsoyinka"
         git config --global user.email "webmaster@rockylinux.org"
+        git remote set-url origin https://x-access-token:${{ secrets.PAT_DEPLOY_TOKEN }}@github.com/wsoyinka/docs.rockylinux.org.git
         git fetch origin
         if git ls-remote --exit-code --heads origin gh-pages; then
           echo "gh-pages exists. Checking it out."
