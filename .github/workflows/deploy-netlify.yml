@@ -46,6 +46,7 @@ jobs:
         echo "Now Running ls -l mkdocs-app/docs/content/"
         ls -l mkdocs-app/docs/content/
 
+
     - name: Deploy docs with mike to gh-pages
       run: |
         cd mkdocs-app
@@ -53,32 +54,28 @@ jobs:
         git config --global user.email "webmaster@rockylinux.org"
         echo "Use PAT token for auth (not GITHUB_TOKEN)"
         git remote set-url origin https://x-access-token:${{ secrets.PAT_DEPLOY_TOKEN }}@github.com/wsoyinka/docs.rockylinux.org.git
-        echo "Previous set-url cmd successed"
         echo "Now running git fetch origin"
         git fetch origin
-        # If gh-pages branch does not exist yet, create it
-        # ensure gh-pages exists
+
+        # If gh-pages branch does not exist, create it
         if ! git ls-remote --exit-code --heads origin gh-pages; then
-          echo "gh-pages does not exist. Creating orphan branch."
-          git checkout --orphan gh-pages
-          git reset --hard
-          git commit --allow-empty -m "Initial gh-pages commit"
-          git push origin gh-pages
+           echo "gh-pages does not exist. Creating orphan branch."
+           git checkout --orphan gh-pages
+           git reset --hard
+           git commit --allow-empty -m "Initial gh-pages commit"
+           git push origin gh-pages
+           git checkout netlify  # go back to netlify branch after init
         fi
 
-        # Checkout gh-pages for deploy
-        echo "gh-pages exists. Checking it out for mike deploy."
-        git checkout gh-pages
-        git pull origin gh-pages
+        echo "Deploying versions with mike..."
+        mike deploy --update-aliases --branch gh-pages 8
+        mike deploy --update-aliases --branch gh-pages 9
+        mike deploy --update-aliases --branch gh-pages 10 latest
+        mike set-default --branch gh-pages latest
 
-        # Now safe to run mike
-        mike deploy --update-aliases 8
-        mike deploy --update-aliases 9
-        mike deploy --update-aliases 10 latest
-        mike set-default latest
-
-        # push the updated gh-pages
+        echo "Pushing gh-pages updates"
         git push origin gh-pages
+
 
     - name: Deploy to Netlify using V3
       uses: nwtgck/actions-netlify@v3
