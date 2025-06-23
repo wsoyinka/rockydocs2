@@ -59,6 +59,8 @@ jobs:
         ls -l 
         echo "looking for file ..."
         ls -l /home/runner/work/rockydocs2/rockydocs2/mkdocs-app/docs/content/docs/guides/contribute/README.md
+        git config  --global user.name wsoyinka
+        git config  --global user.email webmaster@rockylinux.org
         echo "running mkdocs build"
         mike deploy 8
         mike deploy 9
