@@ -46,35 +46,17 @@ jobs:
         echo "Now Running ls -l mkdocs-app/docs/content/"
         ls -l mkdocs-app/docs/content/
 
-    - name: Build MkDocs site
-      run: |
-        pwd
-        echo "running ls /home/runner/work/rockydocs2/"
-        ls -l /home/runner/work/rockydocs2/
-        echo "running ls -l /home/runner/work/rockydocs2/rockydocs2"
-        ls -l /home/runner/work/rockydocs2/rockydocs2
-        echo "running cd mkdocs-app"
-        cd mkdocs-app
-        echo "running ls -l"
-        ls -l 
-        echo "looking for file ..."
-        ls -l /home/runner/work/rockydocs2/rockydocs2/mkdocs-app/docs/content/docs/guides/contribute/README.md
-        git config  --global user.name wsoyinka
-        git config  --global user.email webmaster@rockylinux.org
-        echo "running mkdocs build"
-        mike deploy 8
-        mike deploy 9
-        mike deploy 10 latest
-        mike set-default latest
 
-    - name: Deploy to Netlify using V3
-      uses: nwtgck/actions-netlify@v3
-      with:
-        publish-dir: mkdocs-app/site
-        production-deploy: true
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        deploy-message: "Automated deploy from rockydocs2-netlify ${{ github.sha }}"
-      env:
-        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+- name: Build + deploy versions with mike
+      run: |
+        cd mkdocs-app
+        git config --global user.name "wsoyinka"
+        git config --global user.email "webmaster@rockylinux.org"
+        git fetch origin gh-pages || git checkout --orphan gh-pages
+        git checkout gh-pages
+        mike deploy 8 -u -b /
+        mike deploy 9 -u -b /
+        mike deploy 10 latest -u -b /
+        mike set-default latest -u -b /
+        git push origin gh-pages
 
