@@ -57,7 +57,7 @@ jobs:
         echo "Now running git fetch origin"
         git fetch origin
         # If gh-pages branch does not exist yet, create it
-       # ensure gh-pages exists
+        # ensure gh-pages exists
         if ! git ls-remote --exit-code --heads origin gh-pages; then
           echo "gh-pages does not exist. Creating orphan branch."
           git checkout --orphan gh-pages
