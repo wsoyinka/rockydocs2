@@ -70,4 +70,3 @@ jobs:
         mike deploy --update-aliases --branch gh-pages 9
         mike deploy --update-aliases --branch gh-pages 10 latest
         mike set-default --branch gh-pages latest
-        git push origin gh-pages
