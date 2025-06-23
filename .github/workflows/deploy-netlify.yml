@@ -51,11 +51,22 @@ jobs:
         cd mkdocs-app
         git config --global user.name "wsoyinka"
         git config --global user.email "webmaster@rockylinux.org"
-        git fetch origin gh-pages || git checkout --orphan gh-pages
-        git checkout gh-pages
-        mike deploy 8 
+        git fetch origin
+        if git ls-remote --exit-code --heads origin gh-pages; then
+          echo "gh-pages exists. Checking it out."
+          git checkout gh-pages
+          git pull origin gh-pages
+        else
+          echo "gh-pages does not exist. Creating orphan branch."
+          git checkout --orphan gh-pages
+          git reset --hard
+          git commit --allow-empty -m "Initial gh-pages commit"
+          git push origin gh-pages
+        fi
+
+        # Now safe to deploy versions
+        mike deploy 8
         mike deploy 9
         mike deploy 10 latest
         mike set-default latest
         git push origin gh-pages
-
