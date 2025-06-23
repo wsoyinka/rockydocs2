@@ -45,9 +45,6 @@ jobs:
         ls -l mkdocs-app/docs/
         echo "Now Running ls -l mkdocs-app/docs/content/"
         ls -l mkdocs-app/docs/content/
- #       ls -l mkdocs-app/content/docs
- #       ls -l mkdocs-app/content/docs
- #       ls -l mkdocs-app/content/docs/docs
 
     - name: Build MkDocs site
       run: |
@@ -63,8 +60,6 @@ jobs:
         echo "looking for file ..."
         ls -l /home/runner/work/rockydocs2/rockydocs2/mkdocs-app/docs/content/docs/guides/contribute/README.md
         echo "running mkdocs build"
-   #     mkdocs build
-   #     mkdocs build
         mike deploy 8
         mike deploy 9
         mike deploy 10 latest
