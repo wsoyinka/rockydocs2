@@ -46,33 +46,19 @@ jobs:
         echo "Now Running ls -l mkdocs-app/docs/content/"
         ls -l mkdocs-app/docs/content/
 
-    - name: DDeploy docs with mike to gh-pages
+    - name: Deploy docs with mike to gh-pages
       run: |
         cd mkdocs-app
         git config --global user.name "wsoyinka"
         git config --global user.email "webmaster@rockylinux.org"
         echo "Use PAT token for auth (not GITHUB_TOKEN)"
         git remote set-url origin https://x-access-token:${{ secrets.PAT_DEPLOY_TOKEN }}@github.com/wsoyinka/docs.rockylinux.org.git
-        #echo "Previous set-url cmd successed"
-        echo "Now running git fetch origin"
+
         git fetch origin
-        echo "will next run git remote -vv"
-        git remote -vv
-        # If gh-pages branch does not exist yet, create it
-        #if ! git ls-remote --exit-code --heads origin gh-pages; then
-        #   echo "gh-pages does not exist. Creating orphan branch."
-        git checkout -b gh-pages
-        #   git reset --hard
-        #   git commit --allow-empty -m "Initial gh-pages commit"
-        #   git push origin gh-pages
-        #fi
-        echo "gh-pages exists or created. Now deploying versions."
-        echo "list all branches"
-        git branch -avvv
-        echo "list all remotes"
-        git remote -vv
-        git checkout netlify
-        #git checkout gh-pages
+        git checkout gh-pages || git checkout --orphan gh-pages
+        git pull origin gh-pages || echo "No remote gh-pages yet"
+
+        echo "Now deploying versions with mike..."
         mike deploy --update-aliases --branch gh-pages 8
         mike deploy --update-aliases --branch gh-pages 9
         mike deploy --update-aliases --branch gh-pages 10 latest
@@ -82,7 +68,6 @@ jobs:
         mike list
         echo "run ls "
         pwd && ls -l && git log -10 --oneline
-
 
     - name: Deploy to Netlify using V3
       uses: nwtgck/actions-netlify@v3
