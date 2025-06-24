@@ -59,13 +59,13 @@ jobs:
         echo "will next run git remote -vv"
         git remote -vv
         # If gh-pages branch does not exist yet, create it
-        if ! git ls-remote --exit-code --heads origin gh-pages; then
-           echo "gh-pages does not exist. Creating orphan branch."
-           git checkout --orphan gh-pages
-           git reset --hard
-           git commit --allow-empty -m "Initial gh-pages commit"
-           git push origin gh-pages
-        fi
+        #if ! git ls-remote --exit-code --heads origin gh-pages; then
+        #   echo "gh-pages does not exist. Creating orphan branch."
+        git checkout -b gh-pages
+        #   git reset --hard
+        #   git commit --allow-empty -m "Initial gh-pages commit"
+        #   git push origin gh-pages
+        #fi
         echo "gh-pages exists or created. Now deploying versions."
         echo "list all branches"
         git branch -avvv
