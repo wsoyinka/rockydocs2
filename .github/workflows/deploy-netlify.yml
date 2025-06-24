@@ -69,8 +69,8 @@ jobs:
         git branch -avvv
         echo "list all remotes"
         git remote -vv
-        #git checkout netlify
-        git checkout gh-pages
+        git checkout netlify
+        #git checkout gh-pages
         mike deploy --update-aliases --branch gh-pages 8
         mike deploy --update-aliases --branch gh-pages 9
         mike deploy --update-aliases --branch gh-pages 10 latest
